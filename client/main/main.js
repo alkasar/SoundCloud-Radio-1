@@ -1,7 +1,8 @@
 (function (angular) {
   "use strict";
   angular.module('SoundCloudRadio.main', ['ngRoute', 'SoundCloudRadio.main.note'])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
     $routeProvider
       .when('/', {
         templateUrl: 'main/main.tpl.html',
@@ -18,12 +19,11 @@
     $scope.CLIENT_API_KEY = 'f1b510d0104aa451ffa6a5b998475988';
     $scope.tracks = {};
     $scope.queryTrack = '';
-    var trackTitleLookup = {};
-    var trackUrlLookup = {};
     var tracks = [];
     $scope.trackUi;
 
     var cache = {};
+    var trackMetadata = {};
     var masterTrackId;
 
     var parseRequest = function(request){
@@ -57,6 +57,7 @@
         if(cache[trackId] !== undefined){
           initialize();
           $scope.trackUi = cache[trackId];
+          $scope.queryTrack = data.title;
           return;
         }
         masterTrackId = trackId;
@@ -81,8 +82,10 @@
                 var trackId = song[j].id;
                 var trackTitle = song[j].title;
                 var trackUrl = song[j].permalink_url;
-                trackTitleLookup[trackId] = trackTitle;
-                trackUrlLookup[trackId] = trackUrl;
+                trackMetadata[trackId] = {
+                  title: trackTitle,
+                  url: trackUrl
+                };
                 $scope.tracks[trackId] ? $scope.tracks[trackId]++ : $scope.tracks[trackId] = 1;
               }
             });
@@ -95,7 +98,7 @@
 
     $scope.parseTracks = function(){
       for(var key in $scope.tracks){
-        if($scope.tracks[key] > 4) tracks.push([key, $scope.tracks[key], trackTitleLookup[key], trackUrlLookup[key]]);
+        if($scope.tracks[key] > 4) tracks.push([key, $scope.tracks[key], trackMetadata[key].title, trackMetadata[key].url]);
       }
       tracks.sort(function(a,b){
         return b[1] - a[1];
