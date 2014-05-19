@@ -1,3 +1,36 @@
+body {
+  padding-top: 80px;
+}
+
 #messages {
   color: lightgrey
+}
+
+
+.spinner{
+  margin-bottom: 6px;
+}
+
+.track-header{
+  color: black;
+  font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+  font-size: 16px;
+}
+
+.track-header:hover{
+  color: black;
+}
+
+.track-artist{
+  color: grey;
+  font-size: 12px;
+  font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+}
+
+.play {
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
+  margin-bottom: 3px;
+  cursor: pointer;
 }
