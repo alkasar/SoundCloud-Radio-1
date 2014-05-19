@@ -4,7 +4,8 @@
   "dependencies": {
     "express": "*",
     "mongoose": "*",
-    "q": "*"
+    "q": "*",
+    "bluebird": "^1.2.4"
   },
   "devDependencies": {
     "gulp": "*",
