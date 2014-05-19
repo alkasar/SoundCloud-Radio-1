@@ -6,6 +6,12 @@ var mongoose    = require('mongoose'),
     middle      = require('./middleware');
 
 mongoose.connect(process.env.DB_URL || 'mongodb://localhost/SoundCloudRadio');
+
+var db = mongoose.connection;
+
+var Schema = mongoose.Schema;
+
+module.exports = db;
 /*
  * Include all your global env variables here.
 */
