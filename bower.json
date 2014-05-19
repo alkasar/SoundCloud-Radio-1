@@ -1,0 +1,11 @@
+{
+  "name": "sound-cloud-radio",
+  "version": "",
+  "dependencies": {
+    "bootstrap-css-only": "*",
+    "angular": "*" ,
+    "angular-route": "*",
+    "ng-Fx": "*"
+  }
+}
+
