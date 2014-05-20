@@ -2,11 +2,18 @@
   "use strict";
   angular.module('SoundCloudRadio.main', ['ngRoute', 'SoundCloudRadio.main.note'])
   .config(function ($routeProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
     $routeProvider
       .when('/', {
         templateUrl: 'main/main.tpl.html',
         controller: 'MainController'
+      })
+      .when('/server', {
+        templateUrl: 'server/server.tpl.html',
+        controller: 'ServerController'
+      })
+      .when('/stats', {
+        templateUrl: 'stats/stats.tpl.html',
+        controller: 'StatsController'
       })
       .otherwise({
         redirectTo: '/'
@@ -109,5 +116,22 @@
       $scope.trackUi = tracks;
     };
 
+  })
+  .controller('ServerController', function($scope, $http, $q){
+    $scope.test = 'Server Controller';
+    $scope.retrieve = function(){
+      var newRequest = $scope.newRequest;
+      $scope.newRequest = '';
+      $scope.progress = 'Fetching Suggestions'
+      $scope.trackUi = [];
+      $http.get('/' + newRequest).then(function(data){
+        $scope.trackUi = data.data.results;
+        $scope.progress = '';
+        $scope.queryTrack = data.data.track;
+      });
+    };
+  })
+  .controller('StatsController', function($scope, $http, $q){
+    $scope.test = 'Stats Controller';
   });
 }(angular));

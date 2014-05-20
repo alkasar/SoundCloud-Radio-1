@@ -29,6 +29,7 @@ exports.renderIndex = function(req, res){
 exports.fetchSuggestions = function(req, res){
   var possiblyNewTracks = {}; //Save this in the closure scope for use later
   var suggestions = [];
+  var trackTitle;
 
   //Clean up the url a bit, remove https
   req.url = req.url.substring(1);
@@ -43,6 +44,7 @@ exports.fetchSuggestions = function(req, res){
           url: parseRequest(req.url),
           json: true
         }).then(function(data){
+          trackTitle = track.title;
           var track = data[0].body;
           var newTrack = new Track;
           newTrack.url = track.permalink_url;
@@ -58,6 +60,7 @@ exports.fetchSuggestions = function(req, res){
 
     } else {
       return new Promise(function(resolve, reject){
+        trackTitle = track.title;
         resolve(track);
       });
     }
@@ -189,7 +192,7 @@ exports.fetchSuggestions = function(req, res){
         }
       }
       for(var key in tracks){
-        if(tracks[key] > 5){
+        if(tracks[key] > 4){
           suggestions.push(key);
           suggestions.sort(function(a,b){
             return tracks[a] - tracks[b];
@@ -242,13 +245,10 @@ exports.fetchSuggestions = function(req, res){
             plays: data[i].plays
           });
         }
-        console.log(results);
+        res.json({results: results, track: trackTitle});
       });
     });
-
   });
-
-  res.send(200);
 }
 
 exports.fetchSuggestionsInternal = function(req, res){

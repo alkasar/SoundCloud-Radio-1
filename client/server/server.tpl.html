@@ -1,0 +1,21 @@
+<div class="row" ng-hide="progress">
+  <div class="col-md-12"></div>
+    <form ng-submit="retrieve()">
+      <input ng-model="newRequest" class="form-control" autofocus placeholder="Enter SoundCloud Track URL">
+    </form>
+  </div>
+</div>
+
+<h1 ng-show="queryTrack && !progress">Showing Matches For: {{ queryTrack }}</h1>
+
+<h2><span><img src="images/ajax-loader.gif" ng-show="progress" class="spinner"></span> {{ progress }}</h2>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <tr ng-repeat="track in trackUi">
+        <td><img class="play" src="images/media-play.png" ng-click="test()"><a href="{{track.url}}" class="track-header">{{track.title}}</a></td>
+      </tr>
+    </table>
+  </div>
+</div>
