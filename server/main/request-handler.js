@@ -1,3 +1,4 @@
+
 var db = require('./config');
 var Promise = require('bluebird');
 var User = require('./models/user');
@@ -29,7 +30,7 @@ exports.renderIndex = function(req, res){
 exports.top100 = function(req, res){
   Track.find().sort({plays: -1}).limit(100).exec(function(err, data){
     res.json({results: data});
-  })
+  });
 };
 
 exports.fetchSuggestions = function(req, res){
@@ -50,8 +51,8 @@ exports.fetchSuggestions = function(req, res){
           url: parseRequest(req.url),
           json: true
         }).then(function(data){
-          trackTitle = track.title;
           var track = data[0].body;
+          trackTitle = track.title;
           var newTrack = new Track;
           newTrack.url = track.permalink_url;
           newTrack.title = track.title;

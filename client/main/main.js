@@ -142,7 +142,52 @@
       $scope.trackUi = songs;
     });
   })
-  .controller('RadioController', function($scope, $http){
-    $scope.test = 'Radio Controller';
+  .controller('RadioController', function($scope, $http, $q, $sce){
+    var currentSong;
+    var currentSongUri;
+    var currentSongTitle;
+    var parseRequest = function(request){
+      if(request.indexOf('api') !== -1){
+        return request + '.json?client_id=f1b510d0104aa451ffa6a5b998475988';
+      } else if(request.indexOf('http') !== -1){
+        return 'http://api.soundcloud.com/resolve.json?url=' + request + '&client_id=f1b510d0104aa451ffa6a5b998475988';
+      } else {
+        return 'http://api.soundcloud.com' + request + '.json?client_id=f1b510d0104aa451ffa6a5b998475988';
+      }
+    };
+
+    var fetchSong = function(url){
+      $http.get('/' + url).then(function(data){
+        return data;
+      });
+    };
+
+
+    $scope.getNextSong = function(){
+      if(!currentSong){
+        currentSong = $scope.newRequest;
+        $scope.newRequest = '';
+      }
+      console.log(currentSong);
+      $http.get('/' + currentSong).then(function(data){
+        var deferred = $q.defer();
+        deferred.resolve(data); 
+        return deferred.promise;
+      }).then(function(data){
+        console.log(data);
+        return $http.get(parseRequest(data.data.results[1].url));
+      }).then(function(data){
+        var deferred = $q.defer();
+        deferred.resolve(data.data);
+        return deferred.promise;
+      }).then(function(data){
+        currentSong = data.permalink_url;
+        currentSongUri = data.uri;
+        currentSongTitle = data.title;
+        console.log(currentSong, currentSongUri, currentSongTitle);
+        $scope.currentSongTitle = currentSongTitle;
+        $scope.currentSongUri = $sce.trustAsResourceUrl(currentSongUri);
+      });
+    }
   });
 }(angular));
