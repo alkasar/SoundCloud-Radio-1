@@ -28,7 +28,7 @@ exports.renderIndex = function(req, res){
 
 exports.fetchSuggestions = function(req, res){
   var possiblyNewTracks = {}; //Save this in the closure scope for use later
-
+  var suggestions = [];
 
   //Clean up the url a bit, remove https
   req.url = req.url.substring(1);
@@ -91,6 +91,7 @@ exports.fetchSuggestions = function(req, res){
     var promises = [];
     var userIds = [];
     var userHolder = [];
+    var insertionIds = [];
 
     for(var i = 0; i < favoriters.length; i++){
       var userId = favoriters[i];
@@ -173,7 +174,7 @@ exports.fetchSuggestions = function(req, res){
       //If the user is already in the database, an array of arrays of users is returned
       //Else an object is returned
       var tracks = {};
-      var suggestions = [];
+      
       for(var i = 0; i < users.length; i++){
         if(typeof users[i][0] === 'undefined'){
           user = users[i];
@@ -190,7 +191,53 @@ exports.fetchSuggestions = function(req, res){
           suggestions.push(key);
         }
       }
-      console.log(suggestions);
+      return new Promise(function(resolve, reject){
+        resolve();
+      });
+    }).then(function(){ //We've saved the users and their favorites to the database, as well as their tracks. Now we need to save any tracks 
+    //which aren't already in the db
+      return new Promise(function(resolve, reject){
+        var promises = [];
+        var trackIds = Object.keys(possiblyNewTracks);
+        for(var i = 0; i < trackIds.length; i++){
+          insertionIds.push(trackIds[i]);
+          promises.push(findTrack({scId: trackIds[i]}));
+        }
+        Promise.all(promises).then(function(data){
+          resolve(data);
+        });
+      });
+    }).then(function(data){
+      return new Promise(function(resolve, reject){
+        var promises = [];
+        for(var i = 0; i < data.length; i++){
+          if(data[i] === null){ //Then we need to save a new track to the database
+            var newTrack = new Track(possiblyNewTracks[insertionIds[i]]);
+            var save = Promise.promisify(newTrack.save, newTrack);
+            promises.push(newTrack.save());
+          }
+        }
+        Promise.all(promises).then(function(data){
+          resolve(data);
+        });
+      });
+    }).then(function(data){ //Finally we fetch the metadata for all the trackIDs we have
+      console.log(data);
+      var promises = [];
+      for(var i = 0; i < suggestions.length; i++){
+        promises.push(findTrack({scId: suggestions[i]}));
+      }
+      Promise.all(promises).then(function(data){
+        var results = [];
+        for(var i = 0; i < data.length; i++){
+          results.push({
+            url: data[i].url,
+            title: data[i].title,
+            scId: data[i].scId
+          });
+        }
+        console.log(results);
+      });
     });
 
   });
