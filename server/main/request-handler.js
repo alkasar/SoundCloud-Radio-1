@@ -214,18 +214,18 @@ exports.fetchSuggestions = function(req, res){
           if(data[i] === null){ //Then we need to save a new track to the database
             var newTrack = new Track(possiblyNewTracks[insertionIds[i]]);
             var save = Promise.promisify(newTrack.save, newTrack);
-            promises.push(newTrack.save());
+            promises.push(save());
           }
         }
         Promise.all(promises).then(function(data){
-          resolve(data);
+          resolve('promise called');
         });
       });
     }).then(function(data){ //Finally we fetch the metadata for all the trackIDs we have
-      console.log(data);
       var promises = [];
       for(var i = 0; i < suggestions.length; i++){
-        promises.push(findTrack({scId: suggestions[i]}));
+        var trackId = suggestions[i];
+        promises.push(findTrack({scId: trackId}));
       }
       Promise.all(promises).then(function(data){
         var results = [];
