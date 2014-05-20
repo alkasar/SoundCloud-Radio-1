@@ -1,5 +1,7 @@
 <div class="row">
   <div class="col-md-12">
+    <h1 ng-hide="trackUi"><span><img src="images/ajax-loader.gif" class="spinner"></span> Loading Top 100 Tracks</h1>
+    <h1 ng-show="trackUi">SoundCloud Top 100</h1>
     <table class="table table-striped">
       <tr ng-show="trackUi">
         <th>Ranking</th>

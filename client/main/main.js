@@ -15,6 +15,10 @@
         templateUrl: 'stats/stats.tpl.html',
         controller: 'StatsController'
       })
+      .when('/radio', {
+        templateUrl: 'radio/radio.tpl.html',
+        controller: 'RadioController'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -137,5 +141,8 @@
       var songs = data.data.results;
       $scope.trackUi = songs;
     });
+  })
+  .controller('RadioController', function($scope, $http){
+    $scope.test = 'Radio Controller';
   });
 }(angular));
