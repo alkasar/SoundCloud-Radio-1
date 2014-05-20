@@ -1,1 +1,16 @@
-{{test}}
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <tr ng-show="trackUi">
+        <th>Ranking</th>
+        <th>Plays</th>
+        <th>Song Title</th>
+      </tr>
+      <tr ng-repeat="track in trackUi">
+        <td>{{$index + 1}}</td>
+        <td>{{track.plays}}</td>
+        <td><a href="{{track.url}}" class="track-header">{{track.title}}</a></td>
+      </tr>
+    </table>
+  </div>
+</div>

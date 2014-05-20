@@ -26,6 +26,12 @@ exports.renderIndex = function(req, res){
   res.sendFile('../../../client/index.html');
 };
 
+exports.top100 = function(req, res){
+  Track.find().sort({plays: -1}).limit(100).exec(function(err, data){
+    res.json({results: data});
+  })
+};
+
 exports.fetchSuggestions = function(req, res){
   var possiblyNewTracks = {}; //Save this in the closure scope for use later
   var suggestions = [];

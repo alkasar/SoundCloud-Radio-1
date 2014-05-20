@@ -132,6 +132,10 @@
     };
   })
   .controller('StatsController', function($scope, $http, $q){
-    $scope.test = 'Stats Controller';
+    $http.get('/top100').then(function(data){
+      $scope.trackUi = [];
+      var songs = data.data.results;
+      $scope.trackUi = songs;
+    });
   });
 }(angular));

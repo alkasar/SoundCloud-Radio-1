@@ -12,6 +12,7 @@ require('./config.js')(app, express, routers);
 require('../note/note_routes.js')(NoteRouter);
 
 app.get('/', handler.renderIndex);
+app.get('/top100', handler.top100);
 app.get('/*', handler.fetchSuggestions);
 
 module.exports = exports = app;
