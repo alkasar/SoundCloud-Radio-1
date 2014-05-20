@@ -48,6 +48,7 @@ exports.fetchSuggestions = function(req, res){
           newTrack.url = track.permalink_url;
           newTrack.title = track.title;
           newTrack.scId = track.id;
+          newTrack.plays = track.playback_count;
           var save = Promise.promisify(newTrack.save, newTrack);
           return save()
         }).then(function(track){
@@ -157,7 +158,8 @@ exports.fetchSuggestions = function(req, res){
               possiblyNewTracks[trackId] = {
                 title: track.title,
                 url: track.permalink_url,
-                scId: trackId
+                scId: trackId,
+                plays: track.playback_count
               };
               temp.push(trackId);
             }
@@ -189,6 +191,9 @@ exports.fetchSuggestions = function(req, res){
       for(var key in tracks){
         if(tracks[key] > 5){
           suggestions.push(key);
+          suggestions.sort(function(a,b){
+            return tracks[a] - tracks[b];
+          });
         }
       }
       return new Promise(function(resolve, reject){
@@ -233,7 +238,8 @@ exports.fetchSuggestions = function(req, res){
           results.push({
             url: data[i].url,
             title: data[i].title,
-            scId: data[i].scId
+            scId: data[i].scId,
+            plays: data[i].plays
           });
         }
         console.log(results);

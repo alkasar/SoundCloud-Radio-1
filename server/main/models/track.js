@@ -5,7 +5,8 @@ var trackSchema = new mongoose.Schema({
   scId: Number,
   favoriters: [Number],
   url: String,
-  title: String
+  title: String,
+  plays: Number
 });
 
 var Track = mongoose.model('Track', trackSchema);
