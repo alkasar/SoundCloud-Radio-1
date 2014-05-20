@@ -144,7 +144,6 @@ exports.fetchSuggestions = function(req, res){
           //If favorites had to be added, data[i][0].body contains the list of favorites
           //If no favorites had to be added, data[i] is the user object itself
           var keys = Object.keys(data[i]);
-          console.log(keys);
 
           if(keys.indexOf('save') > -1){
             promises.push(userHolder[i]);
@@ -171,16 +170,15 @@ exports.fetchSuggestions = function(req, res){
         });
       });
     }).then(function(users){ //FINALLY we have all the users who have favorited the track and their favorites. PARSE!!!!
-      console.log(users);
+      //If the user is already in the database, an array of arrays of users is returned
+      //Else an object is returned
       var tracks = {};
       var suggestions = [];
       for(var i = 0; i < users.length; i++){
         if(typeof users[i][0] === 'undefined'){
           user = users[i];
-          console.log(user, 'FIRST CONDITION');
         } else {
-          user = users[i][0].body;
-          console.log(user, 'SECOND CONDITION');
+          user = users[i][0];
         }
         for(var j = 0; j < user.favorites.length; j++){
           var trackId = user.favorites[j];
