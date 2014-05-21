@@ -32,7 +32,7 @@ var scrape = function(){
     var array = track.url.split('');
     array.splice(5, 0 , 's');
     var queryUrl = array.join('');
-    return handler.fetchSuggestionsInternal({url: '/' + queryUrl}, {send: function(){}});
+    return handler.fetchSuggestionsInternal({url: '/' + queryUrl, scId: track.scId}, {send: function(){}});
   })
   .then(function(resolutionMessage){
     console.log('Fetch complete');
@@ -42,8 +42,8 @@ var scrape = function(){
 };
 
 var initialize = function(){
-  minPlays = 10000000;
+  minPlays = 3000000;
 };
 
 initialize();
-scrape(10000000);
+scrape(3000000);
